@@ -1,0 +1,36 @@
+{ "name": "deepsortobj",
+  "version": "0.1.0",
+  "description": "Deep-copy an object, with keys sorted. Supports circular references and custom sort order.",
+  "keywords": [
+    "circular",
+    "keys",
+    "object",
+    "sort",
+    "sorted"
+  ],
+
+  "author": "M.K. (https://github.com/mk-pmb)",
+  "homepage": "https://github.com/mk-pmb/deepsortobj-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/deepsortobj-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/deepsortobj-js/issues"
+  },
+
+  "private": false, "license": "ISC",
+
+  "main": "deepsortobj.js",
+  "scripts": { "test": "demo-util-160404-test-demos" },
+  "directories": {
+    "test": "test"
+  },
+
+  "devDependencies": {
+    "lib-demo-util-160404": "^0.1.0"
+  },
+
+
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}
