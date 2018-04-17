@@ -49,9 +49,9 @@ Supported options, all optional:
       argument and must return an array of keys.
 
   * `circular`: How to deal with circular references. Supported values:
-    * `undefined` (default) or `"copy"`:
+    * `undefined` (default) or `"congruent"`:
       Try to maintain the structure by putting a reference to the sorted
-      version of the object that's
+      version of the object. (Deprecated alias: `"copy"`)
     * `"ign"`: Disable checking for CR.
       This should speed up stringification of non-circular objects,
       at the risk of running into infinite recursion if `obj`
@@ -113,17 +113,17 @@ Output:
   outdent="  //= `" cut-tail="`" code="javascript" -->
 <!--#verbatim lncnt="16" -->
 ```javascript
-{ ant: 
-   { canRideOn: 
+{ ant:
+   { canRideOn:
       [ 'tree leaf',
         { colors: [ 'grey', 'white' ],
           favoritePassenger: [Circular],
           sounds: [ 'woof' ] } ],
      colors: [ 'red', 'black' ] },
   cat: { colors: [ 'white', 'orange' ], sounds: [ 'meow', 'purr' ] },
-  dog: 
+  dog:
    { colors: [ 'grey', 'white' ],
-     favoritePassenger: 
+     favoritePassenger:
       { canRideOn: [ 'tree leaf', [Circular] ],
         colors: [ 'red', 'black' ] },
      sounds: [ 'woof' ] } }

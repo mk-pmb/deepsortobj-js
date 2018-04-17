@@ -48,8 +48,12 @@
   function parseOpt_circ(val) {
     switch (val) {
     case undefined:
-    case 'copy':
-    case 'ign':       // <-- the
+    case 'copy':      // deprecated
+    case 'congruent':
+      return false;
+    case 'ign':
+      // nothing special here; instead, the ignorance is achieved by
+      // having an empty sortedParents array.
       return false;
     case 'err':
       return throwCircRefErr;

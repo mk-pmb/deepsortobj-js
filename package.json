@@ -1,5 +1,5 @@
 { "name": "deepsortobj",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Deep-copy an object, with keys sorted. Supports circular references and custom sort order.",
   "keywords": [
     "circular",
