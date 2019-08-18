@@ -12,6 +12,7 @@
   var EX;
 
   function sortArrayInplace(keyList) { return keyList.sort(); }
+  function numCmp(a, b) { return a - b; }
 
   function limitedLastIndexOf(needle, haystack, maxIdx) {
     while ((maxIdx >= 0) && (haystack[maxIdx] !== needle)) { maxIdx -= 1; }
@@ -20,7 +21,7 @@
 
   function throwCircRefErr(ref, info) {
     var err = 'Encountered a circular reference at ' +
-      (info ? info.path.join('.') : '<unknown path>');
+      (info ? info.srcPath.join('.') : '<unknown path>');
     err = new Error(err);
     err.circRef = (info || ref);
     throw err;
@@ -65,11 +66,13 @@
   EX = function sortObj(obj, how) {
     how = (how || false);
     if (typeof how === 'function') { how = { sort: how }; }
-    var path = [], onCircRef = how.circular, diveUnlessCircular, circIdx,
+    var srcPath = [], onCircRef = how.circular, diveUnlessCircular, circIdx,
       origParents = (onCircRef === 'ign' ? null : []),
       sortedParents = (origParents && []),
       isAry = expectFunc(ifUndef(how.isArray, Array.isArray)),
       dictKeys = expectFunc(ifUndef(how.dictKeys, EX.dictKeys)),
+      keyPrefix = (how.keyPrefix || ''),
+      keySuffix = (how.keySuffix || ''),
       sortKeys = parseOpt_sortKeys(how.sortKeys);
     onCircRef = parseOpt_circ(onCircRef);
 
@@ -93,8 +96,10 @@
           subKey = subVal;
           subVal = origVal[subKey];
         }
-        path[origDepth] = subKey;
-        sorted[subKey] = diveUnlessCircular(subDepth, subVal, maxParentIdx);
+        srcPath[origDepth] = subKey;
+        subVal = diveUnlessCircular(subDepth, subVal, maxParentIdx);
+        if (keys) { subKey = keyPrefix + subKey + keySuffix; }
+        sorted[subKey] = subVal;
       });
       return sorted;
     }
@@ -103,8 +108,8 @@
       circIdx = limitedLastIndexOf(val, origParents, maxParentIdx);
       if (circIdx < 0) { return dive(depth, val); }
       if (!onCircRef) { return sortedParents[circIdx]; }
-      path = path.slice(0, depth);
-      return onCircRef(val, { path: path, ref: val,
+      var shortPath = srcPath.slice(0, depth);
+      return onCircRef(val, { srcPath: shortPath, ref: val,
         parents: origParents, });
     } : dive);
 
@@ -112,13 +117,15 @@
   };
 
 
+  // BEGIN define integer key
+  EX.intRgx = /^0$|^-?[1-9][0-9]*$/;
+  // ENDOF define integer key
   EX.numsLast = (function () {
-    var digitsRgx = /^[0-9]+$/;
-    function numCmp(a, b) { return b - a; }
     return function numsLast(keys) {
       var texts = [], nums = [];
       keys.forEach(function (k) {
-        (String(k).search(digitsRgx) >= 0 ? nums : texts).push(k);
+        if (EX.intRgx.test(k)) { return nums.push(k); }
+        texts.push(k);
       });
       return texts.sort().concat(nums.sort(numCmp));
     };
