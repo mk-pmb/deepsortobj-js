@@ -9,7 +9,13 @@
     module.exports = factory();
   }
 }(function () {
-  var EX;
+  function undefNoOp() { return; }
+  var EX, isBuf = undefNoOp;
+  if ('function' === typeof Buffer) { // may be missing in web browsers
+    if ('function' === typeof Buffer.isBuffer) {
+      isBuf = Buffer.isBuffer;
+    }
+  }
 
   function sortArrayInplace(keyList) { return keyList.sort(); }
   function numCmp(a, b) { return a - b; }
@@ -134,7 +140,7 @@
 
   EX.dictKeys = function dictKeys(x) {
     return (((x && typeof x) === 'object') && (!(Array.isArray(x)
-      || Buffer.isBuffer(x)
+      || isBuf(x)
       )) && Object.keys(x));
   };
 
